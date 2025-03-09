@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 
@@ -50,10 +51,8 @@ namespace MP3CONVERTER.Controllers
 
                 await youtube.Videos.Streams.DownloadAsync(audioStreamInfo, audioFilePath);
 
-                // Convert to MP3
                 ConvertToMp3(audioFilePath, mp3FilePath);
 
-                // Delete the original file after conversion
                 System.IO.File.Delete(audioFilePath);
 
                 if (!System.IO.File.Exists(mp3FilePath))
@@ -63,7 +62,6 @@ namespace MP3CONVERTER.Controllers
 
                 Console.WriteLine($"Conversion completed. MP3 saved at: {mp3FilePath}");
 
-                // Return MP3 file as a download response
                 var fileBytes = await System.IO.File.ReadAllBytesAsync(mp3FilePath);
                 return File(fileBytes, "audio/mpeg", fileName);
             }
@@ -77,7 +75,17 @@ namespace MP3CONVERTER.Controllers
 
         private void ConvertToMp3(string inputFile, string outputFile)
         {
-            string ffmpegPath = _configuration["FFmpegPath"];
+            string ffmpegPath;
+
+            // Check if running on Windows or Linux
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                ffmpegPath = _configuration["FFmpegPath:Windows"];
+            }
+            else
+            {
+                ffmpegPath = _configuration["FFmpegPath:Linux"];
+            }
 
             if (string.IsNullOrEmpty(ffmpegPath))
             {

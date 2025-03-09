@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy the project files and restore dependencies
-COPY *.csproj ./
+COPY MP3CONVERTER.csproj ./
 RUN dotnet restore
 
 # Copy the entire project and build it
