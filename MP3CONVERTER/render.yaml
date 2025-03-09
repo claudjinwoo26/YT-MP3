@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: mp3-converter
+    runtime: docker
+    repo: https://github.com/YOUR_GITHUB_REPO
+    region: oregon
+    plan: free
+    envVars:
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
