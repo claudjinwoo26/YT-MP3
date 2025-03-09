@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "YouTube to MP3 Converter";
+}
+
+<h2>YouTube to MP3 Converter</h2>
+
+<form method="post" asp-controller="Home" asp-action="DownloadMp3">
+    <label for="youtubeUrl">Enter YouTube URL:</label>
+    <input type="text" id="youtubeUrl" name="youtubeUrl" required />
+    <button type="submit">Convert</button>
+</form>
+
+@if (!string.IsNullOrEmpty(ViewBag.FilePath))
+{
+    <p>Download your MP3: <a href="@ViewBag.FilePath" download>Click here</a></p>
+}
